@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="./botones.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-n9q0lkF0XzPh2MdYJPJU1lFjDWwLBSIr0mrYYZAPeSoilL3Ufkqdr+RKB1IcfL7r" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reproductor de video en Canvas</title>
+    <script src="opencv.js"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+
+        .canvas-container {
+            position: relative;
+        }
+       
+        .button-container {
+            position: absolute;
+            top: 340px; 
+            left: 250px; 
+            display: flex;
+            align-items: center;
+        
+           }
+
+        .button-container button {
+            margin-right: 5px;
+            border: none;
+            background: none;
+            vertical-align: middle;/*para alinear los botones*/
+        }
+
+        .button-container button span {
+            visibility: hidden;
+        }
+
+        h1 {
+            text-align: center;
+        }
+                
+        /* Ajustar la posición del botón BROWSE*/ 
+        #fileInput {
+            margin-top: 0px;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Videos Facheritos</h1>
+
+    <div class="canvas-container">
+
+        <canvas id="canvasElement" width="640" height="400"></canvas>
+        <input type="file" id="fileInput" accept="video/*" class="styled">
+        <div class="button-container">
+            <!--BOTON DE RETROCEDER-->
+            <button id="backwardButton"class="styled control-button">
+                <img src="retroceder.png" alt="Retroceder">
+            </button>
+            <!-- Botón de Play/Pause -->
+            <button id="playPauseButton" class="styled control-button">
+                <img src="pausess.png" alt="Play" id="playIcon">
+            </button>
+            <!-- Botón de Avanzar -->            
+            <button id="forwardButton" class="styled control-button">
+                <img src="avanzar.png" alt="Avanzar">
+            </button>
+            <button id="blurButton" class="styled control-button">
+                Desenfocar
+            </button>
+            
+                     
+                          
+        </div>
+
+        <div class="timeline">
+            <input type="range" id="seekBar" value="0">  
+            <div class="time-stamp" id="timeStampContainer">
+                <div id="currentTimeStamp" class="time-stamp-container">00:00</div>
+            </div>      
+        </div>        
+                      
+        <div id="currentTimeDisplay"></div>
+        
+
+                  
+    </div>
+   
+    <script src="video.js"></script>
+</body>
+</html>
