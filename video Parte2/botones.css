@@ -3,9 +3,9 @@ canvas {
     background-color: rgb(146, 176, 190);
    
   }
-.video {
+#canvasVideo {
     
-    border: 10px solid rgb(216, 83, 83);
+    border: 2px solid rgb(17, 17, 17);
   }
 
   #fileInput {
@@ -58,6 +58,7 @@ canvas {
       box-shadow: inset -2px -2px 3px rgba(255, 255, 255, .6),
                   inset 2px 2px 3px rgba(0, 0, 0, .6);
   }
+
 
 #playPauseButton {
   position: relative;
@@ -137,6 +138,3 @@ canvas {
   right: 0;
   margin: auto;
 }
-
-
-

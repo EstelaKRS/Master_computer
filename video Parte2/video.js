@@ -2,15 +2,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const canvas = document.getElementById('canvasElement');
     const ctx = canvas.getContext('2d');
     const video = document.createElement('video');
-    
-    canvas.width = 640;
-    canvas.height = 400;
 
     // Establecer el estilo del texto
     //ctx.font = 'bold 25px Segoe UI';
     //ctx.fillStyle = 'black';   
 
-    video.src = 'video.mp4';
+    //video.src = 'video.mp4';
     video.muted = true;
     video.loop = true;
     video.autoplay = true;
@@ -37,7 +34,9 @@ document.addEventListener('DOMContentLoaded', function() {
               
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.drawImage(video, (canvas.width/2)-( videoWidth/2), (canvas.height/2)-(videoHeight/2), videoWidth, videoHeight);
-               
+                 
+
+
                 //dibujando la bolita
                 ctx.beginPath();
                 ctx.arc(circleX, circleY, circleRadius, 0, Math.PI * 2);
@@ -180,13 +179,18 @@ document.addEventListener('DOMContentLoaded', function() {
         return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
     }
 
-
-    const blurButton = document.getElementById('blurButton');
-    blurButton.addEventListener('click', function() {
-        blurColor();
+    /*const blurButton = document.getElementById('blurButton');
+    blurButton.addEventListener('click', function(event) {
+        blurVideo();
     });
-    async function blurColor() {
-        let begin = Date.now();
+    
+    function blurVideo() {
+        const videoWidth = 400;
+        const videoHeight = 250;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(video, (canvas.width/2)-( videoWidth/2), (canvas.height/2)-(videoHeight/2), videoWidth, videoHeight);
+
         let src = new cv.Mat(video.height, video.width, cv.CV_8UC4);
         let cap = new cv.VideoCapture(video);
 
@@ -195,18 +199,54 @@ document.addEventListener('DOMContentLoaded', function() {
             cap.read(src);
 
             let blurred = new cv.Mat();
-            cv.GaussianBlur(src, blurred, {width: 25, height: 25}, 0, 0, cv.BORDER_DEFAULT);
-            cv.imshow(video, blurred);
+            cv.GaussianBlur(src, blurred, {width: 25, height:25}, 0, 0, cv.BORDER_DEFAULT);
+            cv.imshow(canvasElement, blurred);
+
+            src.delete();
             blurred.delete();
 
-            let delay = 1000 / FPS - (Date.now() - begin);
+            let delay = 1000 / FPS;
             setTimeout(processVideo, delay);
+        }
 
-        
-         }
-
-     setTimeout(processVideo, 0);
+        processVideo();
+    }*/
+    function blurVideo() {
+        const videoWidth = video.videoWidth;
+        const videoHeight = video.videoHeight;
+    
+        // Crear un canvas temporal para aplicar el desenfoque
+        const tempCanvas = document.createElement('canvas');
+        const tempCtx = tempCanvas.getContext('2d');
+    
+        tempCanvas.width = videoWidth;
+        tempCanvas.height = videoHeight;
+    
+        const FPS = 30;
+        function processVideo() {
+            if (!video.paused && !video.ended) {
+                tempCtx.drawImage(video, 0, 0, videoWidth, videoHeight);
+                
+                // Aplicar desenfoque
+                tempCtx.filter = 'blur(5px)'; // Puedes ajustar el valor de desenfoque según tus preferencias
+    
+                // Dibujar el video desenfocado en el canvas principal
+                ctx.drawImage(tempCanvas, 0, 0, canvas.width, canvas.height);
+                
+                requestAnimationFrame(processVideo);
+            }
+        }
+    
+        processVideo();
     }
+    
+    const blurButton = document.getElementById('blurButton');
+    blurButton.addEventListener('click', function(event) {
+        blurVideo();
+    });
+        
+  
+});
 
-   
-}); 
+
+
