@@ -1,0 +1,179 @@
+ body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Arial, sans-serif; /* Agregué una fuente por defecto */
+}
+.video-container{
+  position: relative;
+  width: 600px; /* Ajusta el ancho del reproductor de video según tu preferencia */
+    height: 450px; /* Ajusta el alto del reproductor de video según tu preferencia */
+    margin-top: 20px; /* Añadí un poco de espacio en la parte superior */
+}
+
+input[type="file"] {
+    margin-top: 10px;
+}
+
+  #fileInput {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgb(162, 167, 235);
+    font-size: 0.8em; /* Cambia el tamaño de la fuente */
+    font-weight: bold; /* Cambia el grosor del texto */
+    color: rgb(10, 70, 233); /* Cambia el color del texto */
+    border: none; /* Quita el borde */
+    padding: 0px 10px; /* Ajusta el espaciado interno */
+    border-radius: 10px; /* Agrega bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar el ratón */
+    margin: 0px; 
+    
+}
+
+#fileInput:hover {
+  background-color: rgb(66, 75, 197); /* Cambia el color de fondo al pasar el ratón */
+}
+
+  
+  .styled {
+      border: 0;
+      line-height: 2;
+      padding: 0 3px; /*Ajusta el espacio alrededor del texto*/
+      font-size: 0.8rem; /*Ajusta el tamaño de fuente */
+      text-align: center;
+      color: rgb(243, 236, 236);
+      text-shadow: 1px 1px 1px rgb(222, 223, 248);
+      border-radius: 10px;
+      /*background-image: url('pause.jpg'),si deseas imagen de fonfo*/ 
+      background-image:linear-gradient(to top left,
+                                        rgba(0, 0, 0, .2),
+                                        rgba(0, 0, 0, .2) 30%,
+                                        rgba(0, 0, 0, 0));
+                                        /*url('play.jpg');*/
+      background-color: rgb(66, 75, 197);
+      box-shadow: inset 2px 2px 3px rgba(255, 255, 255, .6),
+                  inset -2px -2px 3px rgba(0, 0, 0, .6);
+                  
+  }
+  
+  .styled:hover {
+      background-color: rgb(162, 167, 235);
+  }
+  
+  .styled:active {
+      box-shadow: inset -2px -2px 3px rgba(255, 255, 255, .6),
+                  inset 2px 2px 3px rgba(0, 0, 0, .6);
+  }
+
+
+#playPauseButton {
+  position: relative;
+  background-color: transparent; /* Quita el fondo del botón */
+  border: none; /* Quita el borde del botón */
+  padding: 0; /* Quita cualquier espacio interno */
+}
+/*PARA EL TAMNHO DE LA IMAGEN*/
+.button-container img {
+  width: 45px; /* El tamaño deseado en píxeles */
+  height: auto; /* Esto mantiene la proporción de la imagen */
+  display: block;
+  margin: 0 auto;
+}
+#playIcon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.control-button i {
+  font-size: inherit;
+}
+.timeline {
+  width: 100%;
+  text-align: center; /* Centrar la línea de tiempo */
+ margin: 5px auto;
+  display: flex; /* Añade un display flex */
+  align-items: center; /* Centra los elementos verticalmente */
+  justify-content: center; /* Centra los elementos horizontalmente */
+}
+/*para la linea del tiempo*/
+#seekBar {
+  width: 80%; /* Ajusta el ancho */
+  height: 10px;
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: #ccc;
+  border: none;
+  border-radius: 5px;
+}
+#seekBar:focus {
+  outline: none;
+}
+/*Para la bolita de la linea de tiempo*/
+#seekBar::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background-color: #4673ad;
+  border: none;
+  border-radius: 50%;
+}
+.time-stamp:first-child {
+  left: 0;
+}
+.control-button {
+  margin-right: 10px; /* Esto añadirá un espacio de 10 píxeles a la derecha de cada botón */
+  padding-right: 10px;
+  margin: 0 10px;
+  background-color: transparent; 
+  border: none; /* Quita el borde del botón */
+}
+#currentTimeDisplay {
+  position: absolute;
+  top: 0;
+  right: 10px; /* Ajusta la posición según tus preferencias */
+  font-size: 1rem; /* Tamaño del texto */
+  color: rgb(19, 17, 17); /* Color del texto */
+}
+.time-stamp-container {
+  
+  position: relative;
+  display: flex; /* Añade un display flex */
+  align-items: center; /* Centra los elementos verticalmente */
+}
+.time-stamp {
+  font-size: 12px;
+  color: rgb(19, 17, 17);
+  text-align: center;
+  margin: 0 5px; /* Añade un espacio entre los elementos de la línea de tiempo */
+}
+#currentTimeStamp {
+  font-size: 0.8rem; /* Tamaño del tiempo actual */
+}
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 0px;
+}
+.video-container video {
+  width: 100%; /* Esto hará que el video ocupe el 100% del contenedor */
+  height: auto; /* Esto mantendrá la proporción original del video */
+}
+.video-container video {
+  width: 600px; /* Esto hará que el video ocupe el 100% del contenedor */
+  height: 450px; /* Esto mantendrá la proporción original del video */
+}
+.bolita {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background-color: rgb(224, 144, 52);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}

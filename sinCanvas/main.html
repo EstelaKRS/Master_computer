@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="botones.css" type="text/css">
+    <title>Video con OpenCV.js</title>
+    <script src="opencv.js"></script>
+</head>
+<body>
+  <h1>Cargar Video</h1>
+  <div class="video-container">
+      
+      <video id="videoElement" ></video>
+      <div class="timeline">
+          <input type="range" id="seekBar" value="0">  
+          <div class="time-stamp" id="timeStampContainer">
+              <div id="currentTimeStamp" class="time-stamp-container">00:00</div>
+          </div>      
+      </div>
+      
+      <div class="button-container">
+          <!-- BOTON DE RETROCEDER -->
+          <button id="backwardButton"class="styled control-button">
+              <img src="retroceder.png" alt="Retroceder">
+          </button>
+          <!-- Botón de Play/Pause -->
+          <button id="playPauseButton" class="styled control-button">
+              <img src="pausess.png" alt="Play" id="playIcon">
+          </button>
+          <!-- Botón de Avanzar -->            
+          <button id="forwardButton" class="styled control-button">
+              <img src="avanzar.png" alt="Avanzar">
+          </button>
+         <!-- <button id="blurButton" class="styled control-button" onclick="blurVideo()">Desenfocar</button> -->
+                 
+      </div>
+              
+                    
+      <div id="currentTimeDisplay"></div>
+  </div>
+  <input type="file" id="fileInput" accept="video/*">
+  <script src="video.js"></script>
+</body>
+</html>
