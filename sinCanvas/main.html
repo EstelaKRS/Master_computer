@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -10,10 +10,8 @@
 <body>
   <h1>Cargar Video</h1>
   <div class="video-container">
-      <!-- <video id="videoElement" ></video> -->
-      <video id="videoElement" width="640px" height="400px"></video>
-
-      <canvas id="canvasElement" width="640px" height="400px"></canvas>
+      <video id="videoElement" width="480px" height="640px"></video>
+      <canvas id="canvasElement" width="480px" height="640px"></canvas> 
 
       <div class="timeline">
           <input type="range" id="seekBar" value="0">  
@@ -23,16 +21,16 @@
       </div>
       
       
-      <div class="button-container">
+      <div class="button-container"> 
           <!-- BOTON DE RETROCEDER -->
-          <button id="backwardButton"class="styled control-button">
+           <button id="backwardButton"class="styled control-button">
               <img src="retroceder.png" alt="Retroceder">
           </button>
-          <!-- Botón de Play/Pause -->
+          <!-- Botón de Play/Pause--> 
           <button id="playPauseButton" class="styled control-button">
               <img src="pausess.png" alt="Play" id="playIcon">
           </button>
-          <!-- Botón de Avanzar -->            
+           <!--Botón de Avanzar -->            
           <button id="forwardButton" class="styled control-button">
               <img src="avanzar.png" alt="Avanzar">
           </button>
@@ -52,4 +50,5 @@
   <input type="file" id="fileInput" accept="video/*">
   <script src="video.js"></script>
 </body>
-</html>
+</html> 
+

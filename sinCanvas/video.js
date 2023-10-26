@@ -160,10 +160,6 @@ document.addEventListener('DOMContentLoaded', function() {
         timeStampContainer.style.visibility = 'visible';
     });
 
-    /*video.addEventListener('play', () => {
-        timeStampContainer.style.visibility = 'hidden';
-    });*/
-
     video.addEventListener('pause', () => {
         isMoving = false;
     });
@@ -200,3 +196,5 @@ document.addEventListener('DOMContentLoaded', function() {
 
     processVideo();
 });
+
+

@@ -161,14 +161,7 @@ input[type="file"] {
   justify-content: center;
   margin-top: 0px;
 }
-.video-container video {
-  width: 100%; /* Esto hará que el video ocupe el 100% del contenedor */
-  height: auto; /* Esto mantendrá la proporción original del video */
-}
-.video-container video {
-  width: 600px; /* Esto hará que el video ocupe el 100% del contenedor */
-  height: 450px; /* Esto mantendrá la proporción original del video */
-}
+
 .bolita {
   position: absolute;
   width: 30px;
