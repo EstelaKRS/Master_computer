@@ -1,35 +1,97 @@
 document.addEventListener('DOMContentLoaded', function() {
+    let isBallVisible = false;
     const fileInput = document.getElementById('fileInput');
-
     const video = document.getElementById('videoElement');
-    
-
     const playPauseButton = document.getElementById('playPauseButton');
     const playIcon = document.getElementById('playIcon');
     const backwardButton = document.getElementById('backwardButton');
     const forwardButton = document.getElementById('forwardButton');
     const seekBar = document.getElementById('seekBar');
-    const currentTimeDisplay = document.getElementById('currentTimeDisplay');
+    const canvas = document.getElementById('canvasElement');
+    const ctx = canvas.getContext('2d');
+    const changeColorButton = document.getElementById('changeColorButton'); // Agregado
 
-    //video.src = 'video.mp4';
+    const showBallButton = document.getElementById('showBallButton');
+     //video.src = 'video.mp4';
     video.muted = true;
     video.loop = true;
     video.autoplay = true;
     video.classList.add('video');
 
     video.addEventListener('loadedmetadata', () => {
-        const bolita = document.createElement('div');
-        bolita.classList.add('bolita');
-        bolita.style.left = '50%';
-        bolita.style.top = '50%';
-        document.querySelector('.video-container').appendChild(bolita);
         video.play();
     });
-    let bolitaSpeedX = 3;
-    let bolitaSpeedY = 3;
+
+    canvas.width = video.width;
+    canvas.height = video.height;
+
+    let circleX = canvas.width / 2;
+    let circleY = canvas.height / 2;
+    const circleRadius = 14;
+    let circleSpeedX = 3;
+    let circleSpeedY = 3;
     let isMoving = true;
+  
+   /* showBallButton.addEventListener('click', () => {
+        isBallVisible = !isBallVisible; // Cambiar el estado de visibilidad de la bolita
+        if (isBallVisible) {
+            animateBall(); // Iniciar animación de la bolita si está visible
+        }
+    });*/
+    showBallButton.addEventListener('click', () => {
+        isBallVisible = !isBallVisible; // Cambiar el estado de visibilidad de la bolita
+        isMoving = isBallVisible; // Iniciar o detener el movimiento de la bolita
+        if (isBallVisible) {
+            animateBall(); // Iniciar animación de la bolita si está visible
+        }
+    });
+
+    function animateBall() {
+        if (isBallVisible) {
+            // Dibujando la bolita
+            ctx.beginPath();
+            ctx.arc(circleX, circleY, circleRadius, 0, Math.PI * 2);
+            ctx.fillStyle = 'yellow'; // Puedes cambiar el color aquí
+            ctx.fill();
+
+            if (isMoving){
+                circleX += circleSpeedX;
+                circleY += circleSpeedY;
+
+                if (circleX - circleRadius <= (canvas.width / 2) - (videoWidth / 2) || circleX + circleRadius >= (canvas.width / 2) + (videoWidth / 2)) {
+                    circleSpeedX = -circleSpeedX;
+                }
+            
+                if (circleY - circleRadius <= (canvas.height / 2) - (videoHeight / 2) || circleY + circleRadius >= (canvas.height / 2) + (videoHeight / 2)) {
+                    circleSpeedY = -circleSpeedY;
+                }
+            }
+            
+            if (isVideoBlurred) {
+                let blurred = new cv.Mat();
+                cv.GaussianBlur(src, blurred, {width: 25, height: 25}, 0, 0, cv.BORDER_DEFAULT);
+                cv.imshow(canvas, blurred);
+                blurred.delete();
+            } else {
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            }
+
+            
+
+            requestAnimationFrame(animateBall);
+        }
+    }
 
 
+    function applyBlur() {
+        isVideoBlurred = !isVideoBlurred; // Cambiar el estado de desenfoque
+    }
+
+    changeColorButton.addEventListener('click', function() {
+        applyBlur(); // Llamar a la función de desenfoque al hacer clic en el botón
+    });
+    
+    
     fileInput.addEventListener('change', function(event) {
         const file = event.target.files[0];
         const objectURL = URL.createObjectURL(file);
@@ -78,11 +140,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     video.addEventListener('pause', () => {
         timeStampContainer.style.visibility = 'visible';
-        //dibujando la bolita
-        /*ctx.beginPath();
-        ctx.arc(circleX, circleY, circleRadius, 0, Math.PI * 2);
-        ctx.fillStyle = 'yellow'; // Puedes cambiar el color aquí
-        ctx.fill();*/
     });
     
     video.addEventListener('play', () => {
@@ -97,11 +154,10 @@ document.addEventListener('DOMContentLoaded', function() {
         isMoving = true;
     });
     
-
-
     seekBar.addEventListener('input', () => {
         video.currentTime = seekBar.value;
         draw();
+        
     });
 
     function formatTime(seconds) {
@@ -109,25 +165,35 @@ document.addEventListener('DOMContentLoaded', function() {
         const remainingSeconds = Math.floor(seconds % 60);
         return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
     }
-    const bolita = document.querySelector('.bolita');
 
-    function animateBolita() {
-        if (isMoving) {
-            let currentX = parseFloat(bolita.style.left) || 0;
-            let currentY = parseFloat(bolita.style.top) || 0;
+   
+    changeColorButton.addEventListener('click', function() {
+        applyBlur(); // Llamar a la función de desenfoque al hacer clic en el botón
+    });
 
-            let newX = currentX + bolitaSpeedX;
-            let newY = currentY + bolitaSpeedY;
+   // Función para aplicar desenfoque
+   function applyBlur() {
+    let src = new cv.Mat(video.height, video.width, cv.CV_8UC4);
+    let cap = new cv.VideoCapture(video);
 
-            newX = Math.min(Math.max(newX, 0), video.offsetWidth - 30);
-            newY = Math.min(Math.max(newY, 0), video.offsetHeight - 30);
+    const FPS = 30;
+    
 
-            bolita.style.left = newX + 'px';
-            bolita.style.top = newY + 'px';
-        }
+    function processVideo() {
+        cap.read(src);
 
-        requestAnimationFrame(animateBolita);
+        let blurred = new cv.Mat();
+        cv.GaussianBlur(src, blurred, {width: 25, height: 25}, 0, 0, cv.BORDER_DEFAULT);
+        
+        cv.imshow(canvas, blurred);
+        blurred.delete();
+
+        let delay = 1000 / FPS;
+        setTimeout(processVideo, delay);
     }
 
-    animateBolita();
+    processVideo();
+}
+
+
 });
