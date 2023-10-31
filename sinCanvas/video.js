@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const canvas = document.getElementById('canvasElement');
     const ctx = canvas.getContext('2d');
     const changeColorButton = document.getElementById('changeColorButton');
-
     const showBallButton = document.getElementById('showBallButton');
 
     
@@ -23,7 +22,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     video.addEventListener('loadedmetadata', () => {
         video.play();
-    });
+    }); 
+    
 
     canvas.width = video.width;
     canvas.height = video.height;
@@ -40,26 +40,37 @@ document.addEventListener('DOMContentLoaded', function() {
             let src = new cv.Mat(video.height, video.width, cv.CV_8UC4);
             let dst = new cv.Mat();
     
-            // Aplicar desenfoque al video
-            if (isVideoBlurred) {
-                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            } else {
-                let blurred = new cv.Mat();
-                cv.GaussianBlur(src, blurred, { width: 25, height: 25 }, 0, 0, cv.BORDER_DEFAULT);
-                cv.imshow(canvas, blurred);
-                blurred.delete();
-            }
+            
     
             // Dibujar la bolita
             let center = new cv.Point(circleX, circleY);
             let color = new cv.Scalar(255, 255, 0, 255); // Amarillo
             cv.circle(src, center, circleRadius, color, -1, cv.LINE_AA, 0);
-    
+            
+
+            // Aplicar efecto de enfoque
+            if (isVideoFocused) {
+                let kernel = new cv.Mat(3, 3, cv.CV_32F, [
+                    -1, -1, -1,
+                    -1,  9, -1,
+                    -1, -1, -1
+                ]);
+                cv.filter2D(src, src, -1, kernel);
+                kernel.delete();
+            }
+            /*if (isVideoFocused) {
+                let blurred = new cv.Mat();
+                cv.GaussianBlur(src, blurred, {width: 25, height: 25}, 0, 0, cv.BORDER_DEFAULT);
+                blurred.copyTo(src);
+                blurred.delete();
+            }*/
+
+
             // Obtener una región alrededor de la bolita
-            let regionX = circleX - circleRadius - 50; // 50 es un valor arbitrario, puedes ajustarlo
-            let regionY = circleY - circleRadius - 50; // 50 es un valor arbitrario, puedes ajustarlo
-            let regionWidth = circleRadius * 2 + 100; // 100 es un valor arbitrario, puedes ajustarlo
-            let regionHeight = circleRadius * 2 + 100; // 100 es un valor arbitrario, puedes ajustarlo
+            let regionX = circleX - circleRadius - 50; 
+            let regionY = circleY - circleRadius - 50;
+            let regionWidth = circleRadius * 2 + 100; 
+            let regionHeight = circleRadius * 2 + 100;
     
             // Asegurarnos de que las coordenadas de la región no sean negativas
             if (regionX < 0) {
@@ -69,26 +80,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 regionY = 0;
             }
     
-            // Obtener la región del video
-            let region = new cv.Mat();
-            let srcRegion = src.roi(new cv.Rect(regionX, regionY, regionWidth, regionHeight));
-            srcRegion.copyTo(region);
-    
-            // Aplicar desenfoque solo a la región
-            let blurredRegion = new cv.Mat();
-            cv.GaussianBlur(region, blurredRegion, { width: 25, height: 25 }, 0, 0, cv.BORDER_DEFAULT);
-            blurredRegion.copyTo(srcRegion);
-    
-            // Liberar la memoria de las matrices utilizadas
-            srcRegion.delete();
-            region.delete();
-            blurredRegion.delete();
-    
             // Convertir y mostrar la imagen con la bolita
             cv.imshow(canvas, src);
     
             src.delete();
             dst.delete();
+
     
             if (isMoving) {
                 // Actualizar coordenadas
@@ -109,10 +106,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     
-
     showBallButton.addEventListener('click', () => {
         isBallVisible = !isBallVisible;
         isMoving = isBallVisible;
+        isVideoFocused = true;
         if (isBallVisible) {
             animateBall();
         }

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bolita</title>
+    <script async src="opencv.js" onload="initialize();" type="text/javascript"></script>
+   
+</head>
+<body>
+    <h1>Procesamiento de Imagen</h1>
+    <div class="canvas-container">
+        <canvas id="canvasElement" width="640" height="400"></canvas>
+        <input type="file" id="fileInput" accept="image/*" class="styled">
+        <button id="processImageButton" class="styled control-button">Procesar Imagen</button>
+        <button id="applyBlurButton" class="styled control-button">Aplicar Desenfoque</button>
+        <button id="drawFilledCircleButton" class="styled control-button">bolita</button>
+
+
+    </div>
+    <script src="bolita.js" ></script>
+</body>
+</html>
