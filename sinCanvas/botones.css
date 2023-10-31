@@ -6,9 +6,6 @@
 }
 .video-container{
   position: relative;
-  /*width: 600px; /* Ajusta el ancho del reproductor de video según tu preferencia */
-    /*height: 450px; /* Ajusta el alto del reproductor de video según tu preferencia */
-    /*margin-top: 20px; /* Añadí un poco de espacio en la parte superior */
 }
 
 input[type="file"] {
