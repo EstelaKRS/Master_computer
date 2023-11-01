@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
 
             // Aplicar efecto de enfoque
-            if (isVideoFocused) {
+            /*if (isVideoFocused) {
                 let kernel = new cv.Mat(3, 3, cv.CV_32F, [
                     -1, -1, -1,
                     -1,  9, -1,
