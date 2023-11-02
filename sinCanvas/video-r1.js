@@ -64,12 +64,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
             }
-        }*/
+        }*/ 
+            
     
             // Dibujar la bolita
             let center = new cv.Point(circleX, circleY);
             let color = new cv.Scalar(255, 255, 0, 255); // Amarillo
             cv.circle(src, center, circleRadius, color, -1, cv.LINE_AA, 0);
+
+            
     
             // Convertir y mostrar la imagen con la bolita
             cv.imshow('canvasElement', src);
@@ -96,15 +99,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function applyFocusEffect() {
+        console.log("Aplicando efecto de enfoque");
         let src = new cv.Mat(video.height, video.width, cv.CV_8UC4);
         let dst = new cv.Mat();
     
-        // Obtener la región alrededor de la bolita
-        let regionX = circleX - circleRadius - 100; 
-        let regionY = circleY - circleRadius - 100;
-        let regionWidth = circleRadius * 4; 
-        let regionHeight = circleRadius * 4;
-    
+        // Obtener una región alrededor de la bolita
+        let regionX = circleX - 2*circleRadius;
+        let regionY = circleY - 2*circleRadius;
+        let regionWidth = 4*circleRadius;
+        let regionHeight = 4*circleRadius;
+
         // Asegurarnos de que las coordenadas de la región no sean negativas
         if (regionX < 0) {
             regionX = 0;
@@ -112,34 +116,42 @@ document.addEventListener('DOMContentLoaded', function() {
         if (regionY < 0) {
             regionY = 0;
         }
+
+        // Dibujar un recuadro alrededor de la región
+        let p1 = new cv.Point(regionX, regionY);
+        let p2 = new cv.Point(regionX + regionWidth, regionY + regionHeight);
+        let color = new cv.Scalar(0, 0, 0, 255); // Color del rectángulo (en formato BGR)
+        let thickness = 1; // Grosor del rectángulo
+        cv.rectangle(src, p1, p2, color, thickness, cv.LINE_8, 0);
+            
+        //cv.imshow('canvasElement', src);
     
+        // Copiar la región del video a 'src'
         let region = src.roi(new cv.Rect(regionX, regionY, regionWidth, regionHeight));
     
-        // Crear una máscara de enfoque
-        let mask = new cv.Mat(region.rows, region.cols, cv.CV_8U, new cv.Scalar(0, 0, 0, 255));
-        let center = new cv.Point(circleRadius * 2, circleRadius * 2);
-        let radius = circleRadius * 1.5;
-        cv.circle(mask, center, radius, new cv.Scalar(255, 255, 255, 255), -1, cv.LINE_AA, 0);
-    
-        // Aplicar la máscara a la región
-        cv.bitwise_and(region, region, dst, mask);
-    
-        // Copiar la región enfocada de 'dst' de regreso a 'region' en 'src'
+        // Aplicar efecto de enfoque a la región
+        let kernel = new cv.Mat(5, 5, cv.CV_32F);
+        kernel.data32F.set([-1, -1, -1, -1, -1,
+                   -1, -1, -1, -1, -1,
+                   -1, -1, 25, -1, -1,
+                   -1, -1, -1, -1, -1,
+                   -1, -1, -1, -1, -1]);           
+        
+        cv.filter2D(region, dst, -1, kernel, new cv.Point(-1, -1), 0, cv.BORDER_DEFAULT);
+
+        // Copiar la región enfocada de 'dst' de regreso a 'src'
         dst.copyTo(region);
-    
-        // Liberar recursos
-        region.delete();
-        mask.delete();
-    
+
         // Mostrar el video con el efecto de enfoque aplicado
         cv.imshow('canvasElement', src);
-    
+        // Liberar recursos
+        kernel.delete();
+        region.delete();
         src.delete();
         dst.delete();
+       
     }
-    
-    
-
+     
     showBallButton.addEventListener('click', () => {
         isBallVisible = !isBallVisible;
         isMoving = isBallVisible;
@@ -149,6 +161,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
    
     });
+
+    
 
     function applyBlur() {
         let src = new cv.Mat(video.height, video.width, cv.CV_8UC4);
@@ -163,18 +177,17 @@ document.addEventListener('DOMContentLoaded', function() {
             cv.GaussianBlur(src, dst, { width: 25, height: 25 }, 0, 0, cv.BORDER_DEFAULT);
 
             cv.imshow(canvas, dst);
+            applyFocusEffect();
 
             requestAnimationFrame(processVideo);
         }
 
         processVideo();
     }
-    
 
     changeColorButton.addEventListener('click', function() {
         applyBlur();
     });
-
 
     playPauseButton.addEventListener('click', () => {
         if (video.paused) {
