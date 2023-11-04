@@ -1,9 +1,9 @@
-/*#canvasElement {
+#canvasElement {
   position: absolute;
   top: 0;
   left: 0;
   z-index: 1; 
-}*/
+}
  body {
     display: flex;
     flex-direction: column;
