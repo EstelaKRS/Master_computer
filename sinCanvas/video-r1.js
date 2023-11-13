@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const canvas = document.getElementById('canvasElement');
     const ctx = canvas.getContext('2d');
     const changeColorButton = document.getElementById('changeColorButton');
-
     const showBallButton = document.getElementById('showBallButton');
 
     
@@ -45,23 +44,18 @@ document.addEventListener('DOMContentLoaded', function() {
     let circleSpeedY = 20;
     let isMoving = true;
 
+
     function animateBall() {
         if (isBallVisible) {
             let src = new cv.Mat(video.height, video.width, cv.CV_8UC4);
             let dst = new cv.Mat();           
-    
-            // Dibujar la bolita
-            let center = new cv.Point(circleX, circleY);
-            let color = new cv.Scalar(255, 255, 0, 255); // Amarillo
-            cv.circle(src, center, circleRadius, color, -1, cv.LINE_AA, 0);
+
  
             // Aplicar enfoque
              applyFocusEffect();
             
-    
-            // Convertir y mostrar la imagen con la bolita
-            cv.imshow('canvasElement', src);
-    
+            // Convertir y mostrar la imagen con el cuadro enfocado
+            cv.imshow('canvasElement', src);    
             src.delete();
             dst.delete();
     
@@ -78,12 +72,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    
+
     function applyFocusEffect() {
         console.log("Aplicando efecto de enfoque");
         let src = new cv.Mat(video.height, video.width, cv.CV_8UC4);
         let dst = new cv.Mat();
     
-        // Obtener una región alrededor de la bolita
+    
+        // Obtener una región para enfocar
         let regionX = circleX - 2 * circleRadius;
         let regionY = circleY - 2 * circleRadius;
         let regionWidth = 4 * circleRadius;
@@ -97,7 +94,6 @@ document.addEventListener('DOMContentLoaded', function() {
             regionY = 0;
         }
     
-        
           // Copiar la región del video a 'src'
           let region = src.roi(new cv.Rect(regionX, regionY, regionWidth, regionHeight));
       
@@ -135,6 +131,21 @@ document.addEventListener('DOMContentLoaded', function() {
             animateBall();
         }
    
+    });
+   
+    canvas.addEventListener('click', (event) => {
+        if (isBallVisible) {
+            // Obtener las coordenadas del clic
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = event.clientX - rect.left;
+            const mouseY = event.clientY - rect.top;
+
+            // Actualizar la posición del cuadro de enfoque
+            circleX = mouseX;
+            circleY = mouseY;
+            // Aplicar enfoque en la nueva posición
+        applyFocusEffect();
+        }
     });
 
     
