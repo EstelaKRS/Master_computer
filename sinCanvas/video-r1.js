@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
     video.loop = true;
     video.autoplay = true;
     video.classList.add('video');
+    let mouseX = 0;
+    let mouseY = 0;
 
     fileInput.addEventListener('change', function(event) {
         const file = event.target.files[0];
@@ -58,21 +60,17 @@ document.addEventListener('DOMContentLoaded', function() {
             cv.imshow('canvasElement', src);    
             src.delete();
             dst.delete();
-    
-            
-            
-            if (isMoving) {
+          
+            /*if (isMoving) {
                 // Actualizar coordenadas usando una función senoidal
                 circleX = canvas.width / 2 + Math.sin(Date.now() / 1000) * (canvas.width / 3);
                 circleY = canvas.height / 2 + Math.cos(Date.now() / 1000) * (canvas.height / 3);
-            }
+            }*/
             
     
             requestAnimationFrame(animateBall);
         }
     }
-
-    
 
     function applyFocusEffect() {
         console.log("Aplicando efecto de enfoque");
@@ -99,12 +97,12 @@ document.addEventListener('DOMContentLoaded', function() {
       
           // Aplicar efecto de enfoque a la región
           let kernel = new cv.Mat(5, 5, cv.CV_32F);
-          kernel.data32F.set([-1, -1, -1, -1, -1,
+          kernel.data32F.set([
                      -1, -1, -1, -1, -1,
-                     -1, -1, 26, -1, -1,
                      -1, -1, -1, -1, -1,
-                     -1, -1, -1, -1, -1]);           
-          
+                     -1, -1, 18, -1, -1,
+                     -1, -1, -1, -1, -1,
+                     -1, -1, -1, -1, -1]);
           cv.filter2D(region, dst, -1, kernel, new cv.Point(-1, -1), 0, cv.BORDER_DEFAULT);
   
           // Copiar la región enfocada de 'dst' de regreso a 'src'
@@ -132,24 +130,26 @@ document.addEventListener('DOMContentLoaded', function() {
         }
    
     });
-   
-    canvas.addEventListener('click', (event) => {
+
+    canvas.addEventListener('mousemove', (event) => {
         if (isBallVisible) {
-            // Obtener las coordenadas del clic
+            // Obtén las coordenadas del mouse relativas al canvas
             const rect = canvas.getBoundingClientRect();
-            const mouseX = event.clientX - rect.left;
-            const mouseY = event.clientY - rect.top;
-
-            // Actualizar la posición del cuadro de enfoque
-            circleX = mouseX;
-            circleY = mouseY;
-            // Aplicar enfoque en la nueva posición
-        applyFocusEffect();
+            mouseX = event.clientX - rect.left;
+            mouseY = event.clientY - rect.top;
+            //Verifica si el mouse está dentro del área del canvas
+            if (mouseX >= 0 && mouseX <= canvas.width && mouseY >= 0 && mouseY <= canvas.height) {
+                //Actualizamos la posicion del cuadro de enfoque
+                circleX = mouseX;
+                circleY = mouseY;
+                //Aplicamos enfoque en la nueva posición
+                applyFocusEffect();
+            }
+            
         }
-    });
-
+    })
     
-
+    
     function applyBlur() {
         let src = new cv.Mat(video.height, video.width, cv.CV_8UC4);
         let dst = new cv.Mat();
@@ -164,11 +164,8 @@ document.addEventListener('DOMContentLoaded', function() {
  
             cv.imshow('canvasElement', dst);
             applyFocusEffect();
-            //animateBall()
-            
-            
-
             requestAnimationFrame(processVideo);
+                  
         }
 
         processVideo();
